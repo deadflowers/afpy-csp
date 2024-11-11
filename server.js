@@ -15,6 +15,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(function (req, res, next) {
+res.setHeader( 'Content-Security-Policy', "default-src '*'; script-src '*'; style-src '*'; font-src '*'; img-src '*'; frame-src '*'" );
+next(); });
+
 // Example route to fetch RSS feed
 app.get('/', async (req, res) => {
   const feedUrl = req.query.q;
