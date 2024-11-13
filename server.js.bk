@@ -19,6 +19,7 @@ app.use((req, res, next) => {
 //res.setHeader( 'Content-Security-Policy', "default-src '*'; script-src '*'; style-src '*'; font-src '*'; img-src '*'; frame-src '*'" );
 //next(); });
 
+// Example route to fetch RSS feed
 app.get('/', async (req, res) => {
   const feedUrl = req.query.q;
   const callback = req.query.callback;
@@ -36,10 +37,10 @@ app.get('/', async (req, res) => {
     const entries = parsedFeed.items.map((item) => ({
       title: item.title,
       link: item.link,
-      author: item.creator || item.author || (item['dc:creator'] || {}).value, // Atom sometimes uses "dc:creator"
-      publishedDate: item.pubDate || item.isoDate || item.updated || item.published, // Common Atom date fields
-      content: item.content || item['content:encoded'] || item.summary || item.description, // Atom may use summary
-      contentSnippet: item.contentSnippet || item.summary, // Use summary for Atom snippets
+      author: item.creator || item.author,
+      publishedDate: item.pubDate || item.isoDate,
+      content: item.content || item['content:encoded'],
+      contentSnippet: item.contentSnippet,
     }));
 
     // Limit the number of results if num is specified and valid
@@ -67,7 +68,6 @@ app.get('/', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch or parse RSS feed.' });
   }
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
